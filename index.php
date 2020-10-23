@@ -10,8 +10,9 @@ $slike = DB::query('SELECT * FROM slika ORDER BY cijena ASC');
 <head>
   <title>Miodrag Lazić</title>
   <link rel="stylesheet" type="text/css" href="stil.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	-->
+  <script src ="jq.js"></script>
 <meta 
      name='viewport' 
      content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' 
@@ -21,6 +22,7 @@ $slike = DB::query('SELECT * FROM slika ORDER BY cijena ASC');
 
 </head>
 <body>
+	<!--
 	<header id="header">
 		<div id="naslov">
 			<h1>Miodrag Lazić</h1>
@@ -45,6 +47,7 @@ $slike = DB::query('SELECT * FROM slika ORDER BY cijena ASC');
 
 		</div>
 	</header>
+	-->
 
 	<div class="sadrzaj" style="display:hidden;">
 		<div class="wrapcontent" style="padding-top:30px;">
@@ -52,14 +55,21 @@ $slike = DB::query('SELECT * FROM slika ORDER BY cijena ASC');
 		<div class="tablica">
 		<div  id="fotogalerija" style="display:none;"></div>
 			<?php foreach($slike as $value){ ?>
-			<div class="slika" name="<?php echo$value[3]; ?>">
+			<div class="slika" name="<?php echo$value[0]; ?>">
 				<h3><?php echo$value[1]; ?></h3>
 				<p><?php echo$value[2]; ?></p>
-				<input name="name[]" value="<?php echo$value[0]; ?>" type="text" style="display: none;"></input>
-				<h4 class="cijena"><?php echo$value[3]; ?>€</h4>
+				<h4 class="cijena"><?php 
+					$cijena = $value[3];
+					$status = $value[5];
+					if($status == 1){
+						echo'SOLD';
+					}else{
+						echo$cijena;echo'€'; 
+					}				
+				?></h4>
 				
 				<?php if($value[5]==0){ ?>
-				<button type="button" onclick="addToCart()">Add to cart</button>
+				<button type="button" onclick="addToCart(<?php echo$value[0]; ?>)">Add to cart</button>
 				<?php } ?>
 				<img src="kompresirane/<?php echo$value[4];?>.jpg">
 
@@ -76,26 +86,29 @@ $slike = DB::query('SELECT * FROM slika ORDER BY cijena ASC');
 		</div>
 
 		<form action="order.php" method="post">
-		<div class="shop" style="display:none;">
-			
-			<h2 id="cartanchor">Your cart</h2>
+			<div class="shop" style="display:none;">
+				
+				<h2 id="cartanchor">Your cart</h2>
 
-			<div class="tablica">
-				<div id="k" style="display:none;"></div>		
+				<div class="tablica">
+					<div id="k" style="display:none;"></div>		
+				</div>
+				<br/>
+				<h3 id="intotal"></h3>
+				<input id="arr" type="text" name="arr"></input>
+				<input type="submit" id="botunkupi"></input>
+
+
 			</div>
-			<br/>
-			<h3 id="intotal"></h3>
-			<button id="botunkupi">Buy the paintings</button>
-
-			
-		</div></form>
+		</form>
 
 		<div class="contact" id="contactanchor">
+			<h1>Miodrag Lazic</h1>
 			<h2>I am a painter located in Split, Croatia</h2>
 			<img id="personal" src="personal.jpg" style="margin:30px 0;"></img>
 			<br/>
 			<h3>Email</h3>
-			<a>miodrag@gmail.com</a>
+			<a>miolazi@gmail.com</a>
 			<h3>Instagram</h3>
 			<a href="https://www.instagram.com/lazo.art/" target="_blank">@lazoart</a>
 		</div>
@@ -118,12 +131,14 @@ function provjeriImaLiUCartu(){
 	}
 }
 
-function addToCart(){
+function addToCart(id){
 	$('.shop').show();
 	$('#carta').attr('href','#cartanchor');
 	var x=$(".aktivna");
 	$(".aktivna").removeAttr('class');
 	postojiucart=1;
+
+	$('#arr').val($('#arr').val()+'.'+id);
 
 	
 	ukupno += parseInt(x.attr('name'));

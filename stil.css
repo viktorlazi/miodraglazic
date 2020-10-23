@@ -5,7 +5,6 @@
   padding: 0;
   background-color: rgba(250, 250,250);
   display:grid;
-  grid-template-columns:1fr 6fr;
   user-select: none;
 }
 html{
@@ -56,8 +55,8 @@ header div:not(#naslov){
   float:right;
 }
 .sadrzaj img{
-  height: 250px;
-  width:250px;
+  height: 280px;
+  width:280px;
 }
 .slika{
   transition: 1s;
