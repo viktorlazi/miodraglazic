@@ -3,7 +3,6 @@
 
     $slike=($_POST["arr"]);
     $slike=$slike.'.';
-    print_r($slike);
 
     $s=array();
     while(true){
@@ -18,7 +17,10 @@
            $slike = substr($slike, strpos($slike, '.'), strlen($slike));
        }    
     }
-    print_r($s);
+    // $s sada sadrzi id-ove za slike koje su odabrane
+    $baza = DB::query('SELECT * FROM slika WHERE id IN (' . implode(',', array_map('intval', $s)) . ')');
+    print_r($baza);
+    // $baza sada sadrzi odabrane slike
 
 ?>
 
